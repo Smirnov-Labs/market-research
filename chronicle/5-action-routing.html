@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chronicle — Action routing (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#070F0D;--surface:#0E1F1A;--card:#152822;--card-top:#1A302A;
+  --rule:#22403A;--rule-soft:#1A2E27;--ink:#EAEFEC;--ink-soft:#CFD6D2;--muted:#869792;--subtle:#5A6864;
+  --primary:#2A7066;--primary-fg:#EAEFEC;--primary-soft:#16382F;--primary-on-soft:#6CD0B7;--primary-ring:#4AB199;
+  --brass:#C89A56;--brass-soft:#2E2715;--brass-on-soft:#D9A968;--risk:#A8392A;--risk-soft:#371E1A;--risk-on-soft:#E08576;
+  --neutral-soft:#2B3633;--neutral-on-soft:#A8BAB3;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",Menlo,monospace;
+  --r-btn:6px;--r-inp:8px;--r-card:10px;
+  --c-lab:#6CD0B7;--c-tal:#D9A968;--c-nw:#6BA8D0;--c-acme:#B89AE0;--c-lum:#E08AA8;--c-vela:#8FCF6C;
+}
+*{box-sizing:border-box;margin:0;padding:0;border-color:var(--rule)}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","cv11","ss01"}
+.wrap{max-width:960px;margin:0 auto;padding:0 28px}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--rule);background:rgba(7,15,13,.82);backdrop-filter:blur(14px)}
+.bar{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding:0 32px}
+.brand{display:flex;align-items:center;gap:8px;color:var(--ink);flex-shrink:0}
+.ledger{width:20px;height:20px;color:var(--primary-on-soft)}
+.word{font-family:var(--serif);font-style:italic;font-weight:600;font-size:20px;letter-spacing:-.01em}
+.scope{display:flex;align-items:center;gap:8px;margin-left:6px;padding:5px 10px;border:1px solid var(--rule);border-radius:var(--r-btn);background:var(--card-top);font-size:13px;font-weight:500;color:var(--ink-soft)}
+.scope .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--c-lab),var(--c-acme))}
+.scope .caret{color:var(--muted)}
+.nav{display:flex;align-items:center;gap:2px;flex:1;margin-left:8px}
+.nav a{padding:6px 12px;border-radius:var(--r-btn);font-size:15px;font-weight:500;color:var(--muted)}
+.nav a.active{background:var(--neutral-soft);color:var(--ink)}
+.avatar{width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card-top);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink-soft)}
+.concept{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);border:1px solid var(--rule-soft);border-radius:999px;padding:3px 9px;background:rgba(14,31,26,.7)}
+
+.head{padding:34px 0 8px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-on-soft)}
+.head h1{font-family:var(--serif);font-style:italic;font-size:28px;font-weight:600;letter-spacing:-.01em;margin-top:6px}
+.head p{color:var(--muted);font-size:14px;margin-top:6px;max-width:640px;line-height:1.5}
+
+.sec{padding:22px 0 4px}
+.sec h2{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:600;margin-bottom:12px}
+
+.items{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:14px 16px}
+.cbadge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--rule);padding:2px 8px;border-radius:999px;white-space:nowrap}
+.cbadge .d{width:7px;height:7px;border-radius:50%}
+.item .mid{flex:1;min-width:0}
+.item .txt{font-size:14px;color:var(--ink);font-weight:500;line-height:1.35}
+.item .who{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:3px}
+.item .who b{color:var(--brass-on-soft);font-weight:500}
+.routed{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--ink-soft);background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.routed .lg{width:15px;height:15px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;color:#fff}
+.routed .id{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.route-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--primary-on-soft);background:var(--primary-soft);border:1px solid #2c5249;border-radius:999px;padding:5px 12px;white-space:nowrap}
+
+/* fake-door */
+.door{margin-top:14px;background:linear-gradient(180deg,var(--card-top),var(--card));border:1px solid var(--rule);border-radius:14px;padding:22px 24px}
+.door h2{margin-bottom:4px}
+.door .sub{color:var(--muted);font-size:13px;margin-bottom:16px;max-width:620px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.tile{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.tile .lg{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:14px;color:#fff}
+.tile .nm{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.tile .st{font-size:10px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.tile .st.on{color:var(--primary-on-soft)}
+.tile .st.off{color:var(--subtle)}
+.tile.on{border-color:#2c5249}
+.ask{margin-top:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--rule-soft);padding-top:16px}
+.ask .lbl{font-size:13px;color:var(--ink-soft);font-weight:500}
+.ask .inp{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-inp);padding:9px 12px;font-size:13px;color:var(--muted)}
+.ask .go{background:var(--primary);color:var(--primary-fg);font-size:13px;font-weight:600;padding:9px 16px;border-radius:var(--r-btn)}
+.note{margin-top:14px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.note b{color:var(--brass-on-soft);font-weight:600}
+.spacer{height:44px}
+</style>
+</head>
+<body>
+<div class="concept">Concept preview</div>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="brand">
+      <svg class="ledger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M6 6.5 12 4l6 2.5"/><path d="M6 6.5V19l6 1 6-1V6.5"/><circle cx="12" cy="12.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span class="word">Chronicle</span>
+    </a>
+    <div class="scope"><span class="dot"></span> All companies <span class="caret">▾</span></div>
+    <nav class="nav"><a>Dashboard</a><a>Upcoming</a><a>Calendar</a><a>Meetings</a><a>Clients</a><a>People</a><a>Search</a></nav>
+    <div class="avatar">IS</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="head">
+    <div class="kicker">Close the loop</div>
+    <h1>Every action item, routed where your team already works.</h1>
+    <p>Chronicle extracts the commitments from each meeting — then drops them straight into your task manager, scoped to the right company. No copy-paste.</p>
+  </div>
+
+  <section class="sec">
+    <h2>From this week's meetings</h2>
+    <div class="items">
+      <div class="item">
+        <span class="cbadge"><span class="d" style="background:var(--c-acme)"></span> Acme</span>
+        <div class="mid"><div class="txt">Model 3-tier packaging for the Series A pricing</div><div class="who">Dana Liu · due <b>Thu</b></div></div>
+        <span class="routed"><span class="lg" style="background:#5E6AD2">L</span> Linear <span class="id">ENG-241</span></span>
+      </div>
+      <div class="item">
+        <span class="cbadge"><span class="d" style="background:var(--c-lum)"></span> Lumen</span>
+        <div class="mid"><div class="txt">Send the HIPAA review checklist to Dr. Reyes</div><div class="who">Priya N. · due <b>Wed</b></div></div>
+        <span class="routed"><span class="lg" style="background:#4A154B">#</span> Slack <span class="id">#lumen-clinical</span></span>
+      </div>
+      <div class="item">
+        <span class="cbadge"><span class="d" style="background:var(--c-vela)"></span> Vela</span>
+        <div class="mid"><div class="txt">Revise the LP deck with the new allocation terms</div><div class="who">Ivan · due <b>Fri</b></div></div>
+        <span class="route-btn">Route to → </span>
+      </div>
+      <div class="item">
+        <span class="cbadge"><span class="d" style="background:var(--c-nw)"></span> Northwind</span>
+        <div class="mid"><div class="txt">Schedule the exec QBR before renewal</div><div class="who">Ivan · <b style="color:var(--risk-on-soft)">overdue</b></div></div>
+        <span class="route-btn">Route to → </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="door">
+      <h2>Route to your stack</h2>
+      <div class="sub">Pick where each company's action items should land. Connect once; every future meeting routes automatically.</div>
+      <div class="grid">
+        <div class="tile on"><span class="lg" style="background:#5E6AD2">L</span><span class="nm">Linear</span><span class="st on">● Connected</span></div>
+        <div class="tile on"><span class="lg" style="background:#4A154B">#</span><span class="nm">Slack</span><span class="st on">● Connected</span></div>
+        <div class="tile"><span class="lg" style="background:#F06A6A">A</span><span class="nm">Asana</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#2684FF">J</span><span class="nm">Jira</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#111;border:1px solid #333">N</span><span class="nm">Notion</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#E44332">T</span><span class="nm">Todoist</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#7B68EE">C</span><span class="nm">ClickUp</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#FF3D57">M</span><span class="nm">monday</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#0079BF">T</span><span class="nm">Trello</span><span class="st off">Connect</span></div>
+        <div class="tile"><span class="lg" style="background:#4285F4">G</span><span class="nm">Google Tasks</span><span class="st off">Connect</span></div>
+      </div>
+      <div class="ask">
+        <span class="lbl">Don't see your tool?</span>
+        <span class="inp">e.g. Height, Basecamp, Shortcut…</span>
+        <span class="go">Request it →</span>
+      </div>
+      <div class="note"><b>Per-company scoping:</b> route Acme's actions to Acme's Linear, Lumen's to Lumen's Slack — each company's commitments land only in that company's workspace, never the others.</div>
+    </div>
+  </section>
+  <div class="spacer"></div>
+</main>
+</body>
+</html>
