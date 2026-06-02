@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chronicle — Pricing (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#070F0D;--surface:#0E1F1A;--card:#152822;--card-top:#1A302A;
+  --rule:#22403A;--rule-soft:#1A2E27;
+  --ink:#EAEFEC;--ink-soft:#CFD6D2;--muted:#869792;--subtle:#5A6864;
+  --primary:#2A7066;--primary-fg:#EAEFEC;--primary-soft:#16382F;--primary-on-soft:#6CD0B7;--primary-ring:#4AB199;
+  --brass:#C89A56;--brass-soft:#2E2715;--brass-on-soft:#D9A968;
+  --risk:#A8392A;--risk-soft:#371E1A;--risk-on-soft:#E08576;
+  --neutral-soft:#2B3633;--neutral-on-soft:#A8BAB3;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",Menlo,monospace;
+  --r-btn:6px;--r-inp:8px;--r-card:10px;--r-panel:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;border-color:var(--rule)}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","cv11","ss01"}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--rule);background:rgba(7,15,13,.82);backdrop-filter:blur(14px)}
+.bar{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding:0 32px}
+.brand{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.ledger{width:20px;height:20px;color:var(--primary-on-soft)}
+.word{font-family:var(--serif);font-style:italic;font-weight:600;font-size:20px;letter-spacing:-.01em}
+.bar .right{margin-left:auto;display:flex;gap:16px;align-items:center;font-size:14px;color:var(--muted)}
+.concept{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);border:1px solid var(--rule-soft);border-radius:999px;padding:3px 9px;background:rgba(14,31,26,.7)}
+
+.hero{text-align:center;padding:56px 0 22px}
+.hero h1{font-family:var(--serif);font-style:italic;font-size:42px;font-weight:600;letter-spacing:-.015em;line-height:1.12}
+.hero p{color:var(--ink-soft);font-size:17px;margin-top:14px}
+.hero p b{color:var(--primary-on-soft)}
+.toggle{display:inline-flex;margin-top:24px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);padding:3px}
+.toggle span{font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px;color:var(--muted)}
+.toggle span.on{background:var(--neutral-soft);color:var(--ink)}
+.toggle .save{color:var(--brass-on-soft);font-weight:500;font-size:11px;margin-left:4px}
+
+.base{max-width:760px;margin:26px auto 6px;display:flex;align-items:center;gap:18px;background:linear-gradient(180deg,var(--card-top),var(--card));border:1px solid #33503f;border-radius:var(--r-panel);padding:18px 24px}
+.base .big{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--ink);white-space:nowrap}
+.base .big small{font-size:15px;color:var(--muted);font-family:var(--sans);font-weight:500}
+.base .txt{font-size:13.5px;color:var(--ink-soft);line-height:1.5;border-left:1px solid var(--rule);padding-left:18px}
+.base .txt b{color:var(--primary-on-soft);font-weight:600}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:30px 0 10px}
+.tier{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:24px 22px;display:flex;flex-direction:column;position:relative}
+.tier.pop{border-color:var(--primary-ring);box-shadow:0 0 0 1px var(--primary-ring),0 20px 50px rgba(0,0,0,.45)}
+.popflag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--primary-fg);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.tier .nm{font-family:var(--serif);font-style:italic;font-size:21px;font-weight:600}
+.tier .for{font-size:12.5px;color:var(--muted);margin-top:3px;min-height:34px}
+.tier .price{margin:14px 0 2px}
+.tier .price .amt{font-family:var(--serif);font-size:40px;font-weight:600;letter-spacing:-.01em}
+.tier .price .per{font-size:14px;color:var(--muted);font-weight:500}
+.tier .seat{font-family:var(--mono);font-size:12px;color:var(--primary-on-soft);background:var(--primary-soft);border-radius:5px;padding:5px 9px;display:inline-block;margin-top:6px}
+.tier .cta{margin-top:18px;text-align:center;font-size:14px;font-weight:600;padding:10px;border-radius:var(--r-btn)}
+.tier .cta.solid{background:var(--primary);color:var(--primary-fg)}
+.tier .cta.ghost{border:1px solid var(--rule);color:var(--ink-soft)}
+.feats{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:11px}
+.feats li{display:flex;gap:10px;font-size:13.5px;color:var(--ink-soft);line-height:1.4}
+.feats li .ck{color:var(--primary-on-soft);flex-shrink:0;margin-top:1px}
+.feats li b{color:var(--ink);font-weight:600}
+.feats .hero-line{background:var(--surface);border:1px solid var(--rule-soft);border-radius:8px;padding:10px 12px;margin-bottom:2px}
+.feats .hero-line .n{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink)}
+.feats .hero-line .u{font-size:12px;color:var(--muted)}
+.over{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft)}
+
+.meter{padding:34px 0 8px}
+.meter h2{font-family:var(--serif);font-style:italic;font-size:22px;font-weight:600;text-align:center;margin-bottom:6px}
+.meter .lead{text-align:center;color:var(--muted);font-size:14px;max-width:620px;margin:0 auto 22px}
+.mcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mcard{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:18px 20px}
+.mcard .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-on-soft)}
+.mcard.prime .tag{color:var(--primary-on-soft)}
+.mcard h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:6px 0 7px}
+.mcard p{font-size:13px;color:var(--ink-soft);line-height:1.5}
+.mcard p b{color:var(--ink)}
+.fine{text-align:center;font-size:12px;color:var(--subtle);padding:30px 0 48px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="concept">Concept preview</div>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="brand">
+      <svg class="ledger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M6 6.5 12 4l6 2.5"/><path d="M6 6.5V19l6 1 6-1V6.5"/><circle cx="12" cy="12.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span class="word">Chronicle</span>
+    </a>
+    <div class="right"><span>Product</span><span>Pricing</span><span>Sign in</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Pay for what you record —<br>not who's in the room.</h1>
+    <p>Seats are <b>$5</b>. Connect every company. We meter the GPU time, not your headcount.</p>
+    <div class="toggle"><span class="on">Monthly</span><span>Annual<span class="save">−20%</span></span></div>
+  </section>
+
+  <div class="base">
+    <div class="big">$5<small> / user / mo</small></div>
+    <div class="txt">Add your whole team and connect <b>unlimited accounts across unlimited companies</b>. A 100-person team that records 10 hours a month pays for 10 hours. You're billed on usage below — never on headcount.</div>
+  </div>
+
+  <section class="tiers">
+    <div class="tier">
+      <div class="nm">Operator</div>
+      <div class="for">One person running several companies</div>
+      <div class="price"><span class="amt">$29</span><span class="per"> / mo</span></div>
+      <div class="seat">+ $5 / user · unlimited accounts</div>
+      <ul class="feats">
+        <li class="hero-line"><div><span class="n">50 hrs</span> <span class="u">recorded &amp; transcribed / mo</span></div></li>
+        <li><span class="ck">✓</span><span><b>5,000</b> semantic searches / mo</span></li>
+        <li><span class="ck">✓</span><span>Standard AI insights — decisions &amp; action items</span></li>
+        <li><span class="ck">✓</span><span>All integrations + MCP, per-company scoping</span></li>
+        <li><span class="ck">✓</span><span>90-day retention</span></li>
+      </ul>
+      <div class="over">then $0.45 / recorded hour</div>
+      <div class="cta ghost">Start free trial</div>
+    </div>
+
+    <div class="tier pop">
+      <div class="popflag">Most popular</div>
+      <div class="nm">Studio</div>
+      <div class="for">Agencies &amp; small teams across clients</div>
+      <div class="price"><span class="amt">$99</span><span class="per"> / mo</span></div>
+      <div class="seat">+ $5 / user · unlimited accounts</div>
+      <ul class="feats">
+        <li class="hero-line"><div><span class="n">200 hrs</span> <span class="u">recorded &amp; transcribed / mo</span></div></li>
+        <li><span class="ck">✓</span><span><b>25,000</b> semantic searches / mo</span></li>
+        <li><span class="ck">✓</span><span>Advanced AI — insights, risks &amp; <b>pre-call briefs</b></span></li>
+        <li><span class="ck">✓</span><span>Cross-company rollup + per-company scoping</span></li>
+        <li><span class="ck">✓</span><span>1-year retention</span></li>
+      </ul>
+      <div class="over">then $0.40 / recorded hour</div>
+      <div class="cta solid">Start free trial</div>
+    </div>
+
+    <div class="tier">
+      <div class="nm">Scale</div>
+      <div class="for">High-volume operators &amp; larger teams</div>
+      <div class="price"><span class="amt">$299</span><span class="per"> / mo</span></div>
+      <div class="seat">+ $5 / user · unlimited accounts</div>
+      <ul class="feats">
+        <li class="hero-line"><div><span class="n">600 hrs</span> <span class="u">recorded &amp; transcribed / mo</span></div></li>
+        <li><span class="ck">✓</span><span><b>Unlimited</b> semantic searches</span></li>
+        <li><span class="ck">✓</span><span>Priority extraction + custom insight types</span></li>
+        <li><span class="ck">✓</span><span>SSO, audit log, usage analytics</span></li>
+        <li><span class="ck">✓</span><span>Custom retention + data residency</span></li>
+      </ul>
+      <div class="over">then $0.35 / recorded hour</div>
+      <div class="cta ghost">Talk to us</div>
+    </div>
+  </section>
+
+  <section class="meter">
+    <h2>How metering works</h2>
+    <div class="lead">Three meters, only one you'll ever think about. They track our real cost — recording, transcription, and AI — so price scales with value, not with how many people you add.</div>
+    <div class="mcards">
+      <div class="mcard prime">
+        <div class="tag">The meter that matters</div>
+        <h3>Recorded hours</h3>
+        <p>Every hour a bot records &amp; transcribes draws from your pool. <b>This is the cost driver</b> — so it's the one thing we charge on. Seats and accounts are free to add.</p>
+      </div>
+      <div class="mcard">
+        <div class="tag">Generous</div>
+        <h3>AI insight credits</h3>
+        <p>Decisions, action items, risks, and pre-call briefs. Bundled to be generous — <b>most teams never hit the cap</b>.</p>
+      </div>
+      <div class="mcard">
+        <div class="tag">~Unlimited</div>
+        <h3>Semantic searches</h3>
+        <p>Ask anything across every meeting in every company. Embeddings are cheap, so the allowance is high enough you'll <b>rarely notice it</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="fine">Illustrative pricing — shown for feedback, not final.</div>
+</main>
+</body>
+</html>

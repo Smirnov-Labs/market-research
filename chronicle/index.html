@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chronicle — Multi-company operator concept</title>
+<meta name="description" content="Concept previews: Chronicle for people who run more than one company.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#070F0D;--surface:#0E1F1A;--card:#152822;--card-top:#1A302A;
+  --rule:#22403A;--rule-soft:#1A2E27;--ink:#EAEFEC;--ink-soft:#CFD6D2;--muted:#869792;--subtle:#5A6864;
+  --primary-on-soft:#6CD0B7;--primary-ring:#4AB199;--primary-soft:#16382F;--brass-on-soft:#D9A968;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","cv11","ss01"}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+header{border-bottom:1px solid var(--rule);background:rgba(7,15,13,.82);backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}
+.bar{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:10px;height:58px;padding:0 28px}
+.ledger{width:21px;height:21px;color:var(--primary-on-soft)}
+.word{font-family:var(--serif);font-style:italic;font-weight:600;font-size:21px;letter-spacing:-.01em}
+.tag{margin-left:10px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);border:1px solid var(--rule-soft);border-radius:999px;padding:3px 9px}
+.by{margin-left:auto;font-size:13px;color:var(--muted)}
+
+.hero{padding:60px 0 30px;text-align:center}
+.hero h1{font-family:var(--serif);font-style:italic;font-size:40px;font-weight:600;letter-spacing:-.015em;line-height:1.14}
+.hero p{color:var(--ink-soft);font-size:17px;margin:16px auto 0;max-width:600px}
+.hero .note{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--subtle)}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:18px 0 60px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--primary-ring);box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.thumb{height:188px;overflow:hidden;border-bottom:1px solid var(--rule);background:var(--surface)}
+.thumb img{width:100%;display:block;object-fit:cover;object-position:top center}
+.body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.num{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-on-soft)}
+.card h2{font-family:var(--serif);font-size:19px;font-weight:600;margin:7px 0 6px;letter-spacing:-.005em}
+.card p{font-size:13.5px;color:var(--ink-soft);line-height:1.5;flex:1}
+.view{margin-top:14px;font-size:13px;font-weight:600;color:var(--primary-on-soft)}
+footer{border-top:1px solid var(--rule-soft);padding:24px 0 40px;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--subtle)}
+@media(max-width:820px){.cards{grid-template-columns:1fr}.hero h1{font-size:32px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <svg class="ledger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M6 6.5 12 4l6 2.5"/><path d="M6 6.5V19l6 1 6-1V6.5"/><circle cx="12" cy="12.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+    <span class="word">Chronicle</span>
+    <span class="tag">Concept</span>
+    <span class="by">Smirnov Labs</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>For people who run<br>more than one company.</h1>
+    <p>Every meeting, across every business you run, captured into one brain — sliced by company, priced on what you actually record.</p>
+    <div class="note">Three concept previews · illustrative data</div>
+  </section>
+
+  <section class="cards">
+    <a class="card" href="1-operator-dashboard.html">
+      <div class="thumb"><img src="1-operator-dashboard.png" alt="Operator dashboard mockup"></div>
+      <div class="body">
+        <div class="num">01 · The vision</div>
+        <h2>Operator dashboard</h2>
+        <p>Every company's meetings, decisions, and action items in one unified feed — filter to any single company in a click.</p>
+        <div class="view">View concept →</div>
+      </div>
+    </a>
+
+    <a class="card" href="2-connected-accounts.html">
+      <div class="thumb"><img src="2-connected-accounts.png" alt="Connected accounts and scoping mockup"></div>
+      <div class="body">
+        <div class="num">02 · The control</div>
+        <h2>Accounts &amp; scoping</h2>
+        <p>Six inboxes into one account, each mapped to a company — and per-connection scoping to wall a client's data, CRM, or AI agent to a single company.</p>
+        <div class="view">View concept →</div>
+      </div>
+    </a>
+
+    <a class="card" href="3-pricing.html">
+      <div class="thumb"><img src="3-pricing.png" alt="Pricing mockup"></div>
+      <div class="body">
+        <div class="num">03 · The price</div>
+        <h2>Pricing</h2>
+        <p>Pay for what you record, not who's in the room — $5 seats, unlimited connected accounts, metered on recorded hours.</p>
+        <div class="view">View concept →</div>
+      </div>
+    </a>
+  </section>
+</main>
+
+<footer>Concept previews — illustrative data, not the live product. · Smirnov Labs</footer>
+</body>
+</html>

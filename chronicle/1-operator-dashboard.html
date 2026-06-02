@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chronicle — Operator Dashboard (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#070F0D;--surface:#0E1F1A;--card:#152822;--card-top:#1A302A;
+  --rule:#22403A;--rule-soft:#1A2E27;
+  --ink:#EAEFEC;--ink-soft:#CFD6D2;--muted:#869792;--subtle:#5A6864;
+  --primary:#2A7066;--primary-fg:#EAEFEC;--primary-soft:#16382F;--primary-on-soft:#6CD0B7;--primary-ring:#4AB199;
+  --brass:#C89A56;--brass-soft:#2E2715;--brass-on-soft:#D9A968;
+  --risk:#A8392A;--risk-soft:#371E1A;--risk-on-soft:#E08576;
+  --neutral-soft:#2B3633;--neutral-on-soft:#A8BAB3;
+  --serif:"Source Serif 4",Georgia,serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",Menlo,monospace;
+  --r-chip:4px;--r-btn:6px;--r-inp:8px;--r-card:10px;--r-panel:14px;
+  /* per-company identity colors */
+  --c-lab:#6CD0B7;--c-tal:#D9A968;--c-nw:#6BA8D0;--c-acme:#B89AE0;--c-lum:#E08AA8;--c-vela:#8FCF6C;
+}
+*{box-sizing:border-box;margin:0;padding:0;border-color:var(--rule)}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","cv11","ss01"}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono)}
+.serif{font-family:var(--serif)}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--rule);background:rgba(7,15,13,.82);backdrop-filter:blur(14px)}
+.bar{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding:0 32px}
+.brand{display:flex;align-items:center;gap:8px;color:var(--ink);flex-shrink:0}
+.ledger{width:20px;height:20px;color:var(--primary-on-soft)}
+.word{font-family:var(--serif);font-style:italic;font-weight:600;font-size:20px;letter-spacing:-.01em}
+.scope{display:flex;align-items:center;gap:8px;margin-left:6px;padding:5px 10px;border:1px solid var(--rule);border-radius:var(--r-btn);background:var(--card-top);font-size:13px;font-weight:500;color:var(--ink-soft)}
+.scope .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--c-lab),var(--c-acme))}
+.scope .caret{color:var(--muted)}
+.nav{display:flex;align-items:center;gap:2px;flex:1;margin-left:8px}
+.nav a{padding:6px 12px;border-radius:var(--r-btn);font-size:15px;font-weight:500;color:var(--muted)}
+.nav a.active{background:var(--neutral-soft);color:var(--ink)}
+.avatar{width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card-top);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink-soft)}
+
+/* concept tag */
+.concept{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--subtle);border:1px solid var(--rule-soft);border-radius:999px;padding:3px 9px;background:rgba(14,31,26,.7)}
+
+/* page header */
+.head{padding:32px 0 8px}
+.hello{font-family:var(--serif);font-style:italic;font-size:30px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px;margin-top:4px}
+.sub b{color:var(--ink-soft);font-weight:600}
+
+/* company filter strip */
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:18px 0 6px}
+.fchip{display:flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--rule);border-radius:999px;font-size:13px;font-weight:500;color:var(--ink-soft);background:var(--surface)}
+.fchip.active{background:var(--neutral-soft);color:var(--ink);border-color:var(--rule)}
+.fchip .d{width:8px;height:8px;border-radius:50%}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:18px 0}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:16px 18px}
+.stat .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:var(--serif);font-size:30px;font-weight:600;margin-top:6px;letter-spacing:-.01em}
+.stat .v small{font-size:14px;color:var(--muted);font-family:var(--sans);font-weight:500;margin-left:4px}
+.stat.cost{border-color:#33503f}
+.stat.cost .v{color:var(--primary-on-soft)}
+.stat .delta{font-family:var(--mono);font-size:11px;color:var(--primary-on-soft);margin-top:4px}
+.stat .delta.warn{color:var(--brass-on-soft)}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;padding:8px 0 48px;align-items:start}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 12px}
+.section-title h2{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:600}
+.section-title .link{font-size:13px;color:var(--primary-on-soft);font-weight:500}
+
+/* feed */
+.feed{display:flex;flex-direction:column;gap:12px}
+.item{position:relative;background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:16px 18px 16px 20px;overflow:hidden}
+.item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.item .row1{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.cbadge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink-soft);background:var(--surface);border:1px solid var(--rule);padding:2px 8px;border-radius:999px}
+.cbadge .d{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.item .when{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:auto}
+.item h3{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:-.005em;line-height:1.3}
+.item .meta{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px}
+.item .summary{font-size:14px;color:var(--ink-soft);margin-top:9px;line-height:1.5}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--r-chip);font-family:var(--sans)}
+.chip.decision{background:var(--primary-soft);color:var(--primary-on-soft)}
+.chip.action{background:var(--brass-soft);color:var(--brass-on-soft)}
+.chip.risk{background:var(--risk-soft);color:var(--risk-on-soft)}
+
+/* side panel */
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-card);padding:18px}
+.panel + .panel{margin-top:16px}
+.panel h2{font-family:var(--serif);font-style:italic;font-size:16px;font-weight:600;margin-bottom:14px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.tri div{text-align:center;background:var(--surface);border:1px solid var(--rule-soft);border-radius:8px;padding:10px 4px}
+.tri .n{font-family:var(--serif);font-size:24px;font-weight:600}
+.tri .l{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.tri .decision .n{color:var(--primary-on-soft)}.tri .action .n{color:var(--brass-on-soft)}.tri .risk .n{color:var(--risk-on-soft)}
+.attn{margin-top:14px;background:var(--risk-soft);border:1px solid #5a2b22;border-radius:8px;padding:12px 14px}
+.attn .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--risk-on-soft)}
+.attn p{font-size:13px;color:var(--ink-soft);margin-top:5px;line-height:1.45}
+.attn p b{color:var(--ink)}
+.todo{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-top:1px solid var(--rule-soft)}
+.todo:first-of-type{border-top:0}
+.todo .d{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;background:var(--accent)}
+.todo .t{font-size:13px;color:var(--ink-soft);line-height:1.4}
+.todo .due{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+.todo .due b{color:var(--brass-on-soft)}
+</style>
+</head>
+<body>
+<div class="concept">Concept preview</div>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="brand">
+      <svg class="ledger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M6 6.5 12 4l6 2.5"/><path d="M6 6.5V19l6 1 6-1V6.5"/><circle cx="12" cy="12.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span class="word">Chronicle</span>
+    </a>
+    <div class="scope"><span class="dot"></span> All companies <span class="caret">▾</span></div>
+    <nav class="nav">
+      <a class="active">Dashboard</a><a>Upcoming</a><a>Calendar</a><a>Meetings</a><a>Clients</a><a>People</a><a>Search</a>
+    </nav>
+    <div class="avatar">IS</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="head">
+    <div class="hello">Good morning, Ivan</div>
+    <div class="sub"><b>6 companies</b> · <b>14 accounts</b> connected · Tuesday, June 2</div>
+  </div>
+
+  <div class="filters">
+    <div class="fchip active"><span class="d" style="background:linear-gradient(135deg,var(--c-lab),var(--c-acme))"></span> All companies</div>
+    <div class="fchip"><span class="d" style="background:var(--c-lab)"></span> Smirnov Labs</div>
+    <div class="fchip"><span class="d" style="background:var(--c-tal)"></span> Talorin</div>
+    <div class="fchip"><span class="d" style="background:var(--c-nw)"></span> Northwind</div>
+    <div class="fchip"><span class="d" style="background:var(--c-acme)"></span> Acme Robotics</div>
+    <div class="fchip"><span class="d" style="background:var(--c-lum)"></span> Lumen Health</div>
+    <div class="fchip"><span class="d" style="background:var(--c-vela)"></span> Vela Capital</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Meetings this week</div><div class="v">23</div><div class="delta">across all 6 companies</div></div>
+    <div class="stat cost"><div class="k">Recorded hours · June</div><div class="v">41<small>/ 200 hrs</small></div><div class="delta">20% of your plan used</div></div>
+    <div class="stat"><div class="k">Open action items</div><div class="v">11</div><div class="delta warn">3 due this week</div></div>
+    <div class="stat"><div class="k">Decisions captured</div><div class="v">37</div><div class="delta">this month</div></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="section-title"><h2>Unified feed</h2><span class="link">View all meetings →</span></div>
+      <div class="feed">
+
+        <div class="item" style="--accent:var(--c-acme)">
+          <div class="row1"><span class="cbadge"><span class="d"></span> Acme Robotics</span><span class="when">Today · 9:00 AM</span></div>
+          <h3>Series A pricing strategy sync</h3>
+          <div class="meta">45 min · Dana Liu, Marcus Webb, +2</div>
+          <p class="summary">Agreed to anchor at <b>$40k ACV</b> with a 3-tier package. Dana owns the pricing model; legal to review the MSA template before the board sees it.</p>
+          <div class="chips"><span class="chip decision">Decision</span><span class="chip action">2 action items</span></div>
+        </div>
+
+        <div class="item" style="--accent:var(--c-lab)">
+          <div class="row1"><span class="cbadge"><span class="d"></span> Smirnov Labs</span><span class="when">Yesterday · 4:30 PM</span></div>
+          <h3>Weekly partner standup</h3>
+          <div class="meta">30 min · Priya, Tom, Ivan</div>
+          <p class="summary">Pipeline at <b>$180k</b> weighted. Flagged the Northwind renewal as at-risk and pulled it forward to a QBR this week.</p>
+          <div class="chips"><span class="chip risk">Risk</span><span class="chip action">1 action item</span></div>
+        </div>
+
+        <div class="item" style="--accent:var(--c-lum)">
+          <div class="row1"><span class="cbadge"><span class="d"></span> Lumen Health</span><span class="when">Yesterday · 11:00 AM</span></div>
+          <h3>Onboarding kickoff — Dr. Reyes</h3>
+          <div class="meta">50 min · 5 attendees</div>
+          <p class="summary">Scoped the HIPAA review and data-residency requirements. Clinical pilot confirmed to start <b>June 15</b>; success metrics agreed.</p>
+          <div class="chips"><span class="chip decision">2 decisions</span><span class="chip action">3 action items</span></div>
+        </div>
+
+        <div class="item" style="--accent:var(--c-vela)">
+          <div class="row1"><span class="cbadge"><span class="d"></span> Vela Capital</span><span class="when">Mon · 2:00 PM</span></div>
+          <h3>LP update call — Fund II</h3>
+          <div class="meta">60 min · 6 attendees</div>
+          <p class="summary">First close confirmed at <b>$22M</b>. Two LPs requested revised allocation terms; deck revisions due Friday before the next call.</p>
+          <div class="chips"><span class="chip decision">Decision</span><span class="chip action">1 action item</span></div>
+        </div>
+
+        <div class="item" style="--accent:var(--c-nw)">
+          <div class="row1"><span class="cbadge"><span class="d"></span> Northwind</span><span class="when">Mon · 10:00 AM</span></div>
+          <h3>QBR prep — usage review</h3>
+          <div class="meta">25 min · Sam Okoro, Ivan</div>
+          <p class="summary">Product usage down <b>30%</b> QoQ; champion left the account. Recommend an exec sync before renewal in 6 weeks.</p>
+          <div class="chips"><span class="chip risk">Renewal risk</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <aside>
+      <div class="panel">
+        <h2>This week · all companies</h2>
+        <div class="tri">
+          <div class="decision"><div class="n">5</div><div class="l">Decisions</div></div>
+          <div class="action"><div class="n">11</div><div class="l">Actions</div></div>
+          <div class="risk"><div class="n">2</div><div class="l">Risks</div></div>
+        </div>
+        <div class="attn">
+          <div class="lbl">Needs your attention</div>
+          <p><b>Northwind</b> usage down 30% — renewal in 6 weeks. Exec QBR not yet scheduled.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Top action items</h2>
+        <div class="todo" style="--accent:var(--c-acme)"><span class="d"></span><div><div class="t">Model 3-tier packaging for Series A</div><div class="due">Acme · Dana · due <b>Thu</b></div></div></div>
+        <div class="todo" style="--accent:var(--c-vela)"><span class="d"></span><div><div class="t">Revise LP deck with new allocation terms</div><div class="due">Vela · Ivan · due <b>Fri</b></div></div></div>
+        <div class="todo" style="--accent:var(--c-lum)"><span class="d"></span><div><div class="t">Send HIPAA review checklist to Dr. Reyes</div><div class="due">Lumen · Priya · due <b>Wed</b></div></div></div>
+        <div class="todo" style="--accent:var(--c-nw)"><span class="d"></span><div><div class="t">Schedule Northwind exec QBR</div><div class="due">Northwind · Ivan · <b>overdue</b></div></div></div>
+      </div>
+    </aside>
+  </div>
+</main>
+</body>
+</html>
